@@ -1,7 +1,6 @@
 package suptech.miage.tp6.sec;
 
 public enum ApplicationUserPermission {
-
     TASK_READ("task:read"),
     TASK_WRITE("task:write"),
     TASK_DELETE("task:delete");
@@ -10,5 +9,9 @@ public enum ApplicationUserPermission {
 
     ApplicationUserPermission(String permission) {
         this.permission = permission;
+    }
+
+    public String getPermission() {
+        return permission;
     }
 }

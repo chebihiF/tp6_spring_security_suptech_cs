@@ -3,6 +3,7 @@ package suptech.miage.tp6.sec;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -11,6 +12,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+
+import static suptech.miage.tp6.sec.ApplicationUserPermission.*;
+import static suptech.miage.tp6.sec.ApplicationUserPermission.TASK_WRITE;
+import static suptech.miage.tp6.sec.ApplicationUserRole.ADMIN;
+import static suptech.miage.tp6.sec.ApplicationUserRole.MANAGER;
 
 @Configuration @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,8 +31,10 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/","/index","/css/*","/js/*")
-                .permitAll()
+                .antMatchers("/","/index","/css/*","/js/*").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/v1/tasks/**").hasAuthority(TASK_READ.name())
+                .antMatchers(HttpMethod.POST,"/api/v1/tasks/**").hasAuthority(TASK_WRITE.name())
+                .antMatchers(HttpMethod.DELETE,"/api/v1/tasks/**").hasAuthority(TASK_DELETE.name())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -41,14 +49,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))
-                .roles("ADMIN")
+                .roles(ADMIN.name())
                 .build();
 
         UserDetails manager = User
                 .builder()
                 .username("manager")
                 .password(passwordEncoder.encode("1234"))
-                .roles("MANAGER")
+                .roles(MANAGER.name())
                 .build();
 
         return new InMemoryUserDetailsManager(
