@@ -32,9 +32,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/","/index","/css/*","/js/*").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/tasks/**").hasAuthority(TASK_READ.name())
-                .antMatchers(HttpMethod.POST,"/api/v1/tasks/**").hasAuthority(TASK_WRITE.name())
-                .antMatchers(HttpMethod.DELETE,"/api/v1/tasks/**").hasAuthority(TASK_DELETE.name())
+                .antMatchers(HttpMethod.GET,"/api/v1/tasks/**").hasAuthority(TASK_READ.getPermission())
+                .antMatchers(HttpMethod.POST,"/api/v1/tasks/**").hasAuthority(TASK_WRITE.getPermission())
+                .antMatchers(HttpMethod.DELETE,"/api/v1/tasks/**").hasAuthority(TASK_DELETE.getPermission())
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -49,14 +49,16 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .builder()
                 .username("admin")
                 .password(passwordEncoder.encode("admin"))
-                .roles(ADMIN.name())
+//                .roles(ADMIN.name())
+                .authorities(ADMIN.getGrantedAuthorities())
                 .build();
 
         UserDetails manager = User
                 .builder()
                 .username("manager")
                 .password(passwordEncoder.encode("1234"))
-                .roles(MANAGER.name())
+//                .roles(MANAGER.name())
+                .authorities(MANAGER.getGrantedAuthorities())
                 .build();
 
         return new InMemoryUserDetailsManager(

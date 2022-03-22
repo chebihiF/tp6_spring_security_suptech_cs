@@ -1,6 +1,7 @@
 package suptech.miage.tp6.sec;
 
 public enum ApplicationUserPermission {
+
     TASK_READ("task:read"),
     TASK_WRITE("task:write"),
     TASK_DELETE("task:delete");
