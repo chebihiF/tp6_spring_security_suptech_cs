@@ -1,14 +1,13 @@
 package suptech.miage.tp6.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.sun.istack.NotNull;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -23,4 +22,10 @@ public class User {
     private boolean enabled;
     @ManyToMany(mappedBy = "users")
     private List<Authority> authorities;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+        authorities = new ArrayList<>();
+    }
 }
