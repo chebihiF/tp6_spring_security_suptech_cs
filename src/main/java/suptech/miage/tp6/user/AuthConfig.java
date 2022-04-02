@@ -37,11 +37,13 @@ public class AuthConfig {
           authorityRepository.save(authority_read);
 
           authority_write.getUsers().add(user_admin);
+          authority_write.getUsers().add(user_manager);
           authorityRepository.save(authority_write);
 
-          List<Authority> authorities = authorityRepository.findAuthoritiesByUsersContains(user_admin);
+          authority_delete.getUsers().add(user_admin);
+          authorityRepository.save(authority_delete);
 
-
+          //List<Authority> authorities = authorityRepository.findAuthoritiesByUsersContains(user_admin);
         };
     }
 }
