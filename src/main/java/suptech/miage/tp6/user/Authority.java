@@ -14,5 +14,10 @@ public class Authority {
     private Long id;
     private String name ;
     @ManyToMany
+    @JoinTable(
+            name = "role",
+            joinColumns = @JoinColumn(name = "id_auth"),
+            inverseJoinColumns = @JoinColumn(name = "id_user")
+    )
     private List<User> users;
 }

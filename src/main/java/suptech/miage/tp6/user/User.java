@@ -21,6 +21,6 @@ public class User {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
-    @ManyToMany
+    @ManyToMany(mappedBy = "users")
     private List<Authority> authorities;
 }
