@@ -15,6 +15,7 @@ public class TaskConfig {
         this.taskService = taskService;
     }
 
+    @Bean
     CommandLineRunner initTask(){
         return args -> {
             taskService.addTask(new Task(

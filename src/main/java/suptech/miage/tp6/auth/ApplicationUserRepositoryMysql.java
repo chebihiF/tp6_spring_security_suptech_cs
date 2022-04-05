@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Repository
+@Repository("mysqlRepo")
 public class ApplicationUserRepositoryMysql implements ApplicationUserDao{
 
     private final UserRepository userRepository;
