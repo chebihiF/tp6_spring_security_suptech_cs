@@ -4,6 +4,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import suptech.miage.tp6.sec.ApplicationUserRole;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static suptech.miage.tp6.sec.ApplicationUserRole.ADMIN;
@@ -17,42 +18,44 @@ public class ApplicationUserRepositoryMemory implements ApplicationUserDao{
 
     public ApplicationUserRepositoryMemory(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+        users = new ArrayList<ApplicationUserDetail>();
         users.addAll(List.of(
                 new ApplicationUserDetail(
-                        passwordEncoder.encode("admin"),
-                        "admin",
+                        passwordEncoder.encode("Admin"),
+                        "Admin",
                         ADMIN.getGrantedAuthorities(),
-                        true,
-                        true,
-                        true,
-                        true
+                        false,
+                        false,
+                        false,
+                        false
                 ),
                 new ApplicationUserDetail(
                         passwordEncoder.encode("1234"),
-                        "manager",
+                        "Manager",
                         MANAGER.getGrantedAuthorities(),
-                        true,
-                        true,
-                        true,
-                        true
+                        false,
+                        false,
+                        false,
+                        false
                 ),
                 new ApplicationUserDetail(
-                        passwordEncoder.encode("superAdmin"),
-                        "superAdmin",
+                        passwordEncoder.encode("SuperAdmin"),
+                        "SuperAdmin",
                         ADMIN.getGrantedAuthorities(),
-                        true,
-                        true,
-                        true,
-                        true
+                        false,
+                        false,
+                        false,
+                        false
                 )
         ));
     }
 
     @Override
     public ApplicationUserDetail getUserByUsername(String username) {
-        return users
+        ApplicationUserDetail foundUser = users
                 .stream()
-                .filter(user->user.getUsername().equals(username))
+                .filter(user -> user.getUsername().equals(username))
                 .findFirst().get();
+        return foundUser;
     }
 }

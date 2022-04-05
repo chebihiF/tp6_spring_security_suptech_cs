@@ -11,7 +11,7 @@ public class ApplicationUserService implements UserDetailsService {
 
     private final ApplicationUserDao applicationUserDao;
 
-    public ApplicationUserService(@Qualifier("mysqlRepo") ApplicationUserDao applicationUserDao) {
+    public ApplicationUserService(@Qualifier("inMemoryRepo") ApplicationUserDao applicationUserDao) {
         this.applicationUserDao = applicationUserDao;
     }
 

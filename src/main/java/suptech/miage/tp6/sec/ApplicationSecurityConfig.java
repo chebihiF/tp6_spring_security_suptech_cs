@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -15,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import static suptech.miage.tp6.sec.ApplicationUserPermission.*;
 import static suptech.miage.tp6.sec.ApplicationUserPermission.TASK_WRITE;
 
-@Configuration @EnableWebSecurity
+@Configuration @EnableWebSecurity @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final PasswordEncoder passwordEncoder;
@@ -31,9 +32,6 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/","/index","/css/*","/js/*").permitAll()
-                .antMatchers(HttpMethod.GET,"/api/v1/tasks/**").hasAuthority(TASK_READ.getPermission())
-                .antMatchers(HttpMethod.POST,"/api/v1/tasks/**").hasAuthority(TASK_WRITE.getPermission())
-                .antMatchers(HttpMethod.DELETE,"/api/v1/tasks/**").hasAuthority(TASK_DELETE.getPermission())
                 .anyRequest()
                 .authenticated()
                 .and()
