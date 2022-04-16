@@ -10,8 +10,10 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import suptech.miage.tp6.jwt.JwtUsernameAndPasswordFilter;
 
 import static suptech.miage.tp6.sec.ApplicationUserPermission.*;
 import static suptech.miage.tp6.sec.ApplicationUserPermission.TASK_WRITE;
@@ -30,12 +32,15 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()))
                 .authorizeRequests()
                 .antMatchers("/","/index","/css/*","/js/*").permitAll()
+                .antMatchers("/api/v1/**").hasAnyRole("ADMIN","MANAGER")
                 .anyRequest()
-                .authenticated()
-                .and()
-                .httpBasic();
+                .authenticated();
     }
 
     @Override
