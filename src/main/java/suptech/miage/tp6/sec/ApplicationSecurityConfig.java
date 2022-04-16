@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import suptech.miage.tp6.jwt.JwtTokenVerifier;
 import suptech.miage.tp6.jwt.JwtUsernameAndPasswordFilter;
 
 import static suptech.miage.tp6.sec.ApplicationUserPermission.*;
@@ -36,6 +37,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()))
+                .addFilterAfter(new JwtTokenVerifier(),JwtUsernameAndPasswordFilter.class)
                 .authorizeRequests()
                 .antMatchers("/","/index","/css/*","/js/*").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole("ADMIN","MANAGER")

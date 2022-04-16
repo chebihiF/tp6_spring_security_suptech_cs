@@ -31,6 +31,10 @@ public class AuthConfig {
           Authority authority_write = authorityRepository.save(new Authority("task:write"));
           Authority authority_read = authorityRepository.save(new Authority("task:read"));
           Authority authority_delete = authorityRepository.save(new Authority("task:delete"));
+          Authority admin_role = authorityRepository.save(new Authority("ROLE_ADMIN"));
+
+          admin_role.getUsers().add(user_admin);
+          authorityRepository.save(admin_role);
 
           authority_read.getUsers().add(user_admin);
           authority_read.getUsers().add(user_manager);
