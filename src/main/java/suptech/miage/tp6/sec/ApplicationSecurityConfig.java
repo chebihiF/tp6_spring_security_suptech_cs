@@ -36,13 +36,14 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()))
-                .addFilterAfter(new JwtTokenVerifier(),JwtUsernameAndPasswordFilter.class)
                 .authorizeRequests()
-                .antMatchers("/","/index","/css/*","/js/*").permitAll()
+                .antMatchers("/","/index","/css/*","/js/*","/refreshToken/**").permitAll()
                 .antMatchers("/api/v1/**").hasAnyRole("ADMIN","MANAGER")
                 .anyRequest()
-                .authenticated();
+                .authenticated()
+                .and()
+                .addFilter(new JwtUsernameAndPasswordFilter(authenticationManager()))
+                .addFilterAfter(new JwtTokenVerifier(),JwtUsernameAndPasswordFilter.class);
     }
 
     @Override

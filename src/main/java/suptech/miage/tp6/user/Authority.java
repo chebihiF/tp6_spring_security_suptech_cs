@@ -1,5 +1,6 @@
 package suptech.miage.tp6.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class Authority {
             joinColumns = @JoinColumn(name = "id_auth"),
             inverseJoinColumns = @JoinColumn(name = "id_user")
     )
+    @JsonIgnore
     private List<User> users;
 
     public Authority(String name) {

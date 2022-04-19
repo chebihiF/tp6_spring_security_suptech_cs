@@ -15,7 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class JwtUsernameAndPasswordFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -49,6 +52,11 @@ public class JwtUsernameAndPasswordFilter extends UsernamePasswordAuthentication
     }
 
     @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        super.unsuccessfulAuthentication(request, response, failed);
+    }
+
+    @Override
     protected void successfulAuthentication(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -57,15 +65,26 @@ public class JwtUsernameAndPasswordFilter extends UsernamePasswordAuthentication
 
         String secretKey = "AREYGDK16381JZKDL9182210?DJDO29203";
 
-        String token = Jwts.builder()
-                .setSubject(authResult.getName())
+        String access_token = Jwts.builder()
+                .setSubject(authResult.getName()) //ID, username
                 .claim("authorities", authResult.getAuthorities())
                 .setIssuedAt(new Date())
-                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(2)))
+                .setExpiration(new Date(System.currentTimeMillis()+30*1000))
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
                 .compact();
 
+        String refresh_token = Jwts.builder()
+                .setSubject(authResult.getName()) //ID, username
+                .setIssuedAt(new Date())
+                .setExpiration(java.sql.Date.valueOf(LocalDate.now().plusMonths(6)))
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes()))
+                .compact();
+
+        Map<String,String> tokens = new HashMap<String,String>();
+        tokens.put("access_token",access_token);
+        tokens.put("refresh_token",refresh_token);
+        new ObjectMapper().writeValue(response.getOutputStream(),tokens);
         //response.getWriter().println("Authorization : Bearer "+token);
-        response.addHeader("Authorization","Bearer "+token);
+        //response.addHeader("Authorization","Bearer "+token);
     }
 }
